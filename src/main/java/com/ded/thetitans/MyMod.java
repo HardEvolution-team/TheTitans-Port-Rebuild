@@ -59,6 +59,7 @@ public class MyMod {
     @EventHandler
     public void init(FMLInitializationEvent event) {
         proxy.init(event);
+        SoundRegistry.init();
     }
 
     @SubscribeEvent

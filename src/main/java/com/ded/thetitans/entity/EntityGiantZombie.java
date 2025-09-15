@@ -1,6 +1,6 @@
 package com.ded.thetitans.entity;
 
-import com.ded.thetitans.SoundEvents;
+import com.ded.thetitans.SoundRegistry;
 import net.minecraft.entity.IEntityLivingData;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.monster.EntityZombie;
@@ -36,10 +36,6 @@ public class EntityGiantZombie extends EntityZombie {
 
     public final float SIZE = 30.0F;
     private float lastPartialTickTime;
-    private boolean hasPlayedCreationSound = false;
-    private boolean hasPlayedRoarSound = false;
-    private int livingSoundTimer = 0;
-    private int gruntSoundTimer = 0;
 
     public EntityGiantZombie(World worldIn) {
         super(worldIn);
@@ -82,24 +78,9 @@ public class EntityGiantZombie extends EntityZombie {
             // Отключаем AI во время анимации
             this.setNoAI(true);
 
-            // Проигрываем звук создания при первой активации
-            if (!hasPlayedCreationSound) {
-                // Увеличиваем громкость и дальность звука до 1000 блоков
-                LOGGER.info("Playing creation sound for Giant Zombie at position: {}, {}, {}", this.posX, this.posY, this.posZ);
-                if (SoundEvents.ZOMBT_CREATION == null) {
-                    LOGGER.error("ZOMBT_CREATION sound event is null when trying to play!");
-                } else {
-                    this.playSound(SoundEvents.ZOMBT_CREATION, 10.0F, 1.0F);
-                }
-                hasPlayedCreationSound = true;
-            }
-
             float ticks = getSpawnTicks();
             if (ticks > 0) {
                 setSpawnTicks(ticks - 1.0F);
-                
-                // Проигрываем звуки в зависимости от состояния
-                playAnimationSounds();
             } else {
                 switch (getSpawnState()) {
                     case STATE_RISING_SLOW:
@@ -116,75 +97,9 @@ public class EntityGiantZombie extends EntityZombie {
                         this.noClip = false;
                         // Включаем AI после завершения анимации
                         this.setNoAI(false);
-                        
-                        // Проигрываем звук рыка при завершении анимации
-                        if (!hasPlayedRoarSound) {
-                            // Увеличиваем громкость и дальность звука до 1000 блоков
-                            LOGGER.info("Playing roar sound for Giant Zombie at position: {}, {}, {}", this.posX, this.posY, this.posZ);
-                            if (SoundEvents.ZOMBT_GRUNT == null) {
-                                LOGGER.error("ZOMBT_GRUNT sound event is null when trying to play!");
-                            } else {
-                                this.playSound(SoundEvents.ZOMBT_GRUNT, 10.0F, 1.0F);
-                            }
-                            hasPlayedRoarSound = true;
-                        }
                         break;
                 }
             }
-        } else {
-            // После завершения анимации периодически проигрываем звуки
-            playLivingSounds();
-        }
-    }
-
-    private void playAnimationSounds() {
-        int state = getSpawnState();
-        
-        switch (state) {
-            case STATE_RISING_SLOW:
-            case STATE_RISING_FAST:
-                // Проигрываем звуки grunt во время подъема
-                gruntSoundTimer++;
-                if (gruntSoundTimer >= 20) { // Каждые 20 тиков (1 секунда)
-                    // Увеличиваем громкость и дальность звука до 1000 блоков
-                    LOGGER.info("Playing grunt sound during rising animation for Giant Zombie at position: {}, {}, {}", this.posX, this.posY, this.posZ);
-                    if (SoundEvents.ZOMBT_GRUNT == null) {
-                        LOGGER.error("ZOMBT_GRUNT sound event is null when trying to play during rising animation!");
-                    } else {
-                        this.playSound(SoundEvents.ZOMBT_GRUNT, 10.0F, 1.0F);
-                    }
-                    gruntSoundTimer = 0;
-                }
-                break;
-            case STATE_PAUSE:
-                // Проигрываем звуки living во время паузы
-                livingSoundTimer++;
-                if (livingSoundTimer >= 30) { // Каждые 30 тиков (1.5 секунды)
-                    // Увеличиваем громкость и дальность звука до 1000 блоков
-                    LOGGER.info("Playing living sound during pause animation for Giant Zombie at position: {}, {}, {}", this.posX, this.posY, this.posZ);
-                    if (SoundEvents.ZOMBT_GRUNT == null) {
-                        LOGGER.error("ZOMBT_GRUNT sound event is null when trying to play during pause animation!");
-                    } else {
-                        this.playSound(SoundEvents.ZOMBT_GRUNT, 10.0F, 1.0F);
-                    }
-                    livingSoundTimer = 0;
-                }
-                break;
-        }
-    }
-
-    private void playLivingSounds() {
-        // Периодически проигрываем звуки после завершения анимации
-        livingSoundTimer++;
-        if (livingSoundTimer >= 100) { // Каждые 100 тиков (5 секунд)
-            // Увеличиваем громкость и дальность звука до 1000 блоков
-            LOGGER.info("Playing periodic grunt sound for Giant Zombie at position: {}, {}, {}", this.posX, this.posY, this.posZ);
-            if (SoundEvents.ZOMBT_GRUNT == null) {
-                LOGGER.error("ZOMBT_GRUNT sound event is null when trying to play periodically!");
-            } else {
-                this.playSound(SoundEvents.ZOMBT_GRUNT, 10.0F, 1.0F);
-            }
-            livingSoundTimer = 0;
         }
     }
 
@@ -198,15 +113,11 @@ public class EntityGiantZombie extends EntityZombie {
         super.writeEntityToNBT(compound);
         compound.setInteger("SpawnState", this.getSpawnState());
         compound.setFloat("SpawnTicks", this.getSpawnTicks());
-        compound.setBoolean("HasPlayedCreationSound", this.hasPlayedCreationSound);
-        compound.setBoolean("HasPlayedRoarSound", this.hasPlayedRoarSound);
     }
     @Override public void readEntityFromNBT(NBTTagCompound compound) {
         super.readEntityFromNBT(compound);
         this.setSpawnState(compound.getInteger("SpawnState"));
         this.setSpawnTicks(compound.getFloat("SpawnTicks"));
-        this.hasPlayedCreationSound = compound.getBoolean("HasPlayedCreationSound");
-        this.hasPlayedRoarSound = compound.getBoolean("HasPlayedRoarSound");
     }
     @Override protected boolean canDespawn() { return false; }
     
@@ -221,47 +132,18 @@ public class EntityGiantZombie extends EntityZombie {
         getAttributeMap().getAttributeInstance(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(1000.0D);
     }
     
-    // Play random grunt sounds periodically when alive
+
     @Override
-    protected SoundEvent getAmbientSound() {
-        LOGGER.info("Getting ambient sound for Giant Zombie at position: {}, {}, {}", this.posX, this.posY, this.posZ);
-        if (SoundEvents.ZOMBT_CREATION == null) {
-            LOGGER.error("ZOMBT_CREATION sound event is null!");
-            return null;
-        }
-        return SoundEvents.ZOMBT_CREATION;
-    }
+    protected SoundEvent getAmbientSound() {return SoundRegistry.get("witherzilla.living");}
     
-    // Play random grunt sounds when hurt
+
     @Override
-    protected SoundEvent getHurtSound(DamageSource damageSourceIn) {
-        LOGGER.info("Getting hurt sound for Giant Zombie at position: {}, {}, {}", this.posX, this.posY, this.posZ);
-        if (SoundEvents.ZOMBT_GRUNT == null) {
-            LOGGER.error("ZOMBT_GRUNT sound event is null!");
-            return null;
-        }
-        return SoundEvents.ZOMBT_GRUNT;
-    }
-    
-    // Play death sound
+    protected SoundEvent getHurtSound(DamageSource source) {return SoundRegistry.get("witherzilla.grunt");}
+
     @Override
-    protected SoundEvent getDeathSound() {
-        LOGGER.info("Getting death sound for Giant Zombie at position: {}, {}, {}", this.posX, this.posY, this.posZ);
-        if (SoundEvents.ZOMBT_DEATH == null) {
-            LOGGER.error("ZOMBT_DEATH sound event is null!");
-            return null;
-        }
-        return SoundEvents.ZOMBT_DEATH;
-    }
+    protected SoundEvent getDeathSound() {return SoundRegistry.get("witherzilla.death");}
     
     // Play step sounds
     @Override
-    protected SoundEvent getStepSound() {
-        LOGGER.info("Getting step sound for Giant Zombie at position: {}, {}, {}", this.posX, this.posY, this.posZ);
-        if (SoundEvents.CHOMP == null) {
-            LOGGER.error("CHOMP sound event is null!");
-            return null;
-        }
-        return SoundEvents.CHOMP;
-    }
+    protected SoundEvent getStepSound() {return SoundRegistry.get("witherzilla.death");}
 }
