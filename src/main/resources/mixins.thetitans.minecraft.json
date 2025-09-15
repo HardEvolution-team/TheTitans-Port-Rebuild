@@ -1,0 +1,12 @@
+{
+  "package": "com.ded.thetitans.mixin.minecraft",
+  "refmap": "mixins.thetitans.refmap.json",
+  "target": "@env(DEFAULT)",
+  "minVersion": "0.8",
+  "compatibilityLevel": "JAVA_8",
+  "mixins": [
+    "MixinSharedMonsterAttributes"
+  ],
+  "client": [],
+  "server": []
+}
