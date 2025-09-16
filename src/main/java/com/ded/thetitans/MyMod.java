@@ -8,6 +8,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.Mod;
@@ -51,15 +52,13 @@ public class MyMod {
                 64, 1, true
         );
         EntityRegistry.registerEgg(new ResourceLocation(MODID, "giant_zombie"), 0x00FF00, 0xFF0000);
-
-        // Call proxy preInit (registers renderer on client)
+        MinecraftForge.EVENT_BUS.register(new SoundRegistry());
         proxy.preInit(event);
     }
 
     @EventHandler
     public void init(FMLInitializationEvent event) {
         proxy.init(event);
-        SoundRegistry.init();
     }
 
     @SubscribeEvent

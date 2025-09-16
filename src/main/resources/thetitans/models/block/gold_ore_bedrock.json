@@ -1,7 +1,0 @@
-{
-	"parent":"thetitans:block/ore_block",
-	"textures": {
-		"base": "blocks/bedrock",
-		"overlay": "thetitans:blocks/gold"
-	}
-}

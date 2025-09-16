@@ -1,7 +1,0 @@
-{
-	"parent":"thetitans:block/ore_block",
-	"textures": {
-		"base": "thetitans:blocks/nethrum",
-		"overlay": "thetitans:blocks/demontium"
-	}
-}

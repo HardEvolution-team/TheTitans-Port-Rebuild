@@ -17,7 +17,7 @@ import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nullable;
 
-public class EntityGiantZombie extends EntityZombie {
+public class EntityGiantZombie extends TitanBase {
 
     private static final Logger LOGGER = LogManager.getLogger("TheTitans|SoundPlayback");
 
@@ -59,6 +59,9 @@ public class EntityGiantZombie extends EntityZombie {
         this.setSpawnTicks((float)DURATION_RISING_SLOW);
         this.setNoGravity(true);
         this.noClip = true;
+        
+        // Play the birth sound when the titan spawns
+        this.playBirthSound();
 
         return superLivingData;
     }
@@ -134,16 +137,14 @@ public class EntityGiantZombie extends EntityZombie {
     
 
     @Override
-    protected SoundEvent getAmbientSound() {return SoundRegistry.get("witherzilla.living");}
-    
+    protected SoundEvent getAmbientSound() {return SoundRegistry.TITAN_ZOMBIE_ROAR;}
 
     @Override
-    protected SoundEvent getHurtSound(DamageSource source) {return SoundRegistry.get("witherzilla.grunt");}
+    protected SoundEvent getHurtSound(DamageSource source) {return SoundRegistry.TITAN_ZOMBIE_ROAR;}
 
     @Override
-    protected SoundEvent getDeathSound() {return SoundRegistry.get("witherzilla.death");}
+    protected SoundEvent getDeathSound() {return SoundRegistry.TITAN_ZOMBIE_DEATH;}
     
-    // Play step sounds
     @Override
-    protected SoundEvent getStepSound() {return SoundRegistry.get("witherzilla.death");}
+    protected SoundEvent getStepSound() {return SoundRegistry.TITAN_STEP;}
 }

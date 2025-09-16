@@ -31,38 +31,28 @@ public class RenderGiantZombie extends RenderLiving<EntityGiantZombie> {
         }
 
         float entityHeight = entity.height;
-        final float INITIAL_MODEL_OFFSET_Y = entityHeight * 1.1F - 10.0F; // Добавляем 7 блоков
+        final float INITIAL_MODEL_OFFSET_Y = entityHeight * 1.1F - 10.0F;
 
         float currentAnimationProgress = 0.0F;
 
-        // Вычисляем прогресс анимации
         switch (state) {
             case EntityGiantZombie.STATE_RISING_SLOW:
-                // Прогресс от 0.0 (внизу) до 0.3 (30% пути) - поднимаем немного
                 float slowTicks = entity.getSpawnTicks() - partialTickTime;
                 currentAnimationProgress = MathHelper.clamp((EntityGiantZombie.DURATION_RISING_SLOW - slowTicks) / EntityGiantZombie.DURATION_RISING_SLOW, 0.0F, 0.3F);
                 break;
             case EntityGiantZombie.STATE_PAUSE:
-                // Фиксируем на 30%
                 currentAnimationProgress = 0.3F;
                 break;
             case EntityGiantZombie.STATE_RISING_FAST:
-                // Прогресс от 0.3 до 1.0 с более реалистичной кривой
                 float fastTicks = entity.getSpawnTicks() - partialTickTime;
-                // Используем квадратичную функцию для более естественного ускорения
                 float fastProgress = MathHelper.clamp((EntityGiantZombie.DURATION_RISING_FAST - fastTicks) / EntityGiantZombie.DURATION_RISING_FAST, 0.0F, 1.0F);
-                // Квадратичное ускорение для более реалистичного движения
-                float easedProgress = fastProgress * fastProgress * (3.0F - 2.0F * fastProgress); // Smoothstep функция
+                float easedProgress = fastProgress * fastProgress * (3.0F - 2.0F * fastProgress);
                 currentAnimationProgress = 0.3F + easedProgress * 0.7F;
                 break;
         }
 
-        // ИСПРАВЛЕНИЕ: Теперь модель будет подниматься из-под земли
-        // При progress = 0: yOffset = INITIAL_MODEL_OFFSET_Y (модель глубоко под землей)
-        // При progress = 1: yOffset = 0 (модель на поверхности)
         float yOffset = INITIAL_MODEL_OFFSET_Y * (1.0F - currentAnimationProgress);
 
-        // Применяем смещение, учитывая масштаб (оставляем как было)
         GlStateManager.translate(0.0F, yOffset / this.scale, 0.0F);
     }
 }
