@@ -1,6 +1,7 @@
 package com.ded.thetitans;
 
 import com.ded.thetitans.client.entity.renders.RenderGiantZombie;
+import com.ded.thetitans.entity.EntityZombieTitan;
 import com.ded.thetitans.entity.EntityGiantZombie;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
@@ -34,10 +35,13 @@ public class MyMod {
 
     @SidedProxy(clientSide = "com.ded.thetitans.ClientProxy", serverSide = "com.ded.thetitans.CommonProxy")
     public static CommonProxy proxy;
-
+    public static final String TEXTURES[] = {"default", "new"};
     public static final Logger LOGGER = LogManager.getLogger(MODID);
 
     private static int entityId = 0;
+
+    public static final ResourceLocation genericTitanWhiteTexture32x64 = new ResourceLocation(Tags.MODID, "textures/entities/32x64_disintigration.png");
+    public static final ResourceLocation genericTitanWhiteTexture64x64 = new ResourceLocation(Tags.MODID, "textures/entities/64x64_disintigration.png");
 
 
     @EventHandler
@@ -51,10 +55,21 @@ public class MyMod {
                 this,
                 64, 1, true
         );
+        EntityRegistry.registerModEntity(
+                new ResourceLocation(MODID, "zombie_titan"),
+                EntityZombieTitan.class,
+                "ZombieTitan",
+                entityId++,
+                this,
+                64, 1, true
+        );
         EntityRegistry.registerEgg(new ResourceLocation(MODID, "giant_zombie"), 0x00FF00, 0xFF0000);
+        EntityRegistry.registerEgg(new ResourceLocation(MODID, "zombie_titan"), 0x00AA00, 0xAA0000);
         MinecraftForge.EVENT_BUS.register(new SoundRegistry());
         proxy.preInit(event);
     }
+
+
 
     @EventHandler
     public void init(FMLInitializationEvent event) {

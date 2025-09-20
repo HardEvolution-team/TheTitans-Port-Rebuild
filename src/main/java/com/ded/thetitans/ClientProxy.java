@@ -1,7 +1,9 @@
 package com.ded.thetitans;
 
 import com.ded.thetitans.client.entity.renders.RenderGiantZombie;
+import com.ded.thetitans.client.entity.renders.RenderZombieTitan;
 import com.ded.thetitans.entity.EntityGiantZombie;
+import com.ded.thetitans.entity.EntityZombieTitan;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraftforge.fml.client.registry.IRenderFactory;
@@ -17,6 +19,8 @@ public class ClientProxy extends CommonProxy {
     @Override
     public void preInit(FMLPreInitializationEvent event) {
         RenderingRegistry.registerEntityRenderingHandler(EntityGiantZombie.class, RenderGiantZombie::new);
+        RenderingRegistry.registerEntityRenderingHandler(EntityZombieTitan.class, RenderZombieTitan::new);
         System.out.println("Registered renderer for GiantZombie"); // Debug log to confirm
+        System.out.println("Registered renderer for ZombieTitan"); // Debug log to confirm
     }
 }

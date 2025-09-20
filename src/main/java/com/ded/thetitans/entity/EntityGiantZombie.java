@@ -3,6 +3,7 @@ package com.ded.thetitans.entity;
 import com.ded.thetitans.SoundRegistry;
 import net.minecraft.entity.IEntityLivingData;
 import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.entity.boss.EntityDragon;
 import net.minecraft.entity.monster.EntityZombie;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
@@ -34,7 +35,7 @@ public class EntityGiantZombie extends TitanBase {
     public static final int DURATION_PAUSE = 60;
     public static final int DURATION_RISING_FAST = 80;
 
-    public final float SIZE = 30.0F;
+    public final float SIZE = 10.0F;
     private float lastPartialTickTime;
 
     public EntityGiantZombie(World worldIn) {
@@ -123,12 +124,7 @@ public class EntityGiantZombie extends TitanBase {
         this.setSpawnTicks(compound.getFloat("SpawnTicks"));
     }
     @Override protected boolean canDespawn() { return false; }
-    
-    // Make the giant zombie immune to burning in sunlight
-    @Override
-    protected boolean shouldBurnInDay() {
-        return false;
-    }
+
     
     @Override protected void applyEntityAttributes() {
         super.applyEntityAttributes();

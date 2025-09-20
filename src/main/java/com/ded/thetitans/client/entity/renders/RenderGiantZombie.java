@@ -6,14 +6,19 @@ import net.minecraft.client.renderer.entity.RenderLiving;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
+@SideOnly(Side.CLIENT)
 public class RenderGiantZombie extends RenderLiving<EntityGiantZombie> {
     private static final ResourceLocation ZOMBIE_TEXTURE = new ResourceLocation("textures/entity/zombie/zombie.png");
-    private final float scale = 30.0F;
+    private final float scale = 10.0F;
 
     public RenderGiantZombie(RenderManager renderManagerIn) {
-        super(renderManagerIn, new ModelGiantZombie(), 0.5F * 30.0F);
+        super(renderManagerIn, new ModelGiantZombie(), 0.5F * 10.0F);
     }
+
+
 
     @Override
     protected ResourceLocation getEntityTexture(EntityGiantZombie entity) {
