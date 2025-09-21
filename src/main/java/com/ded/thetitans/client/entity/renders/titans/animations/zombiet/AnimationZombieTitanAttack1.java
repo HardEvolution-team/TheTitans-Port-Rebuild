@@ -4,6 +4,7 @@ import java.util.List;
 import com.ded.thetitans.entity.EntityZombieTitan;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.Vec3d;
 import thehippomaster.AnimationAPI.AIAnimation;
 
@@ -53,19 +54,22 @@ extends AIAnimation
 			Vec3d vec3 = this.entity.getLook(1.0F);
 			double dx = vec3.x * d8;
 			double dz = vec3.z * d8;
-			float f = (float)entity.getAttackValue(1.0F);
+			float f = (float)this.entity.getAttackValue(1.0F);
 			int i = this.entity.getKnockbackAmount();
 			if (entity.isClient())
 			this.entity.shakeNearbyPlayerCameras(10D);
 			List<?> list11 = this.entity.world.getEntitiesWithinAABBExcludingEntity(this.entity, this.entity.getEntityBoundingBox().expand(1.5D * this.entity.getTitanSizeMultiplier(), 4D, 1.5D * this.entity.getTitanSizeMultiplier()).offset(dx, -4D, dz));
 			if ((list11 != null) && (!list11.isEmpty()))
 			{
-				for (int i1 = 0; i1 < list11.size(); i1++)
+				// Optimize: limit the number of entities processed
+				int processedCount = 0;
+				for (int i1 = 0; i1 < list11.size() && processedCount < 5; i1++)
 				{
 					Entity entity1 = (Entity)list11.get(i1);
 					if (this.entity.canAttackClass((Class<? extends EntityLivingBase>) entity1.getClass()))
 					{
 						this.entity.attackChoosenEntity(entity1, f, i);
+						processedCount++;
 					}
 				}
 			}
