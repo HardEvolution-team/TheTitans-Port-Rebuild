@@ -2,10 +2,13 @@ package com.ded.thetitans;
 
 import com.ded.thetitans.entity.EntityZombieTitan;
 import com.ded.thetitans.entity.EntityGiantZombie;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
+import net.minecraft.util.DamageSource;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegistryEvent;
+import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.SidedProxy;
@@ -60,8 +63,6 @@ public class MyMod {
         MinecraftForge.EVENT_BUS.register(new SoundRegistry());
         proxy.preInit(event);
     }
-
-
 
     @EventHandler
     public void init(FMLInitializationEvent event) {

@@ -1,4 +1,4 @@
-package com.ded.thetitans.client.entity.renders.titans.animations.zombiet;
+package com.ded.thetitans.entity.ai;
 import java.util.List;
 
 import com.ded.thetitans.entity.EntityZombieTitan;
